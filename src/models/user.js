@@ -8,7 +8,6 @@ const User = db.define('user', {
         autoIncrement: true,
     },
     name: {
-        field: 'name',
         type: DataTypes.STRING(255),
         allowNull: false
     },
