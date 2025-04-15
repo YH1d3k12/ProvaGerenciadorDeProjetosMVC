@@ -19,10 +19,12 @@ const Project = db.define('project', {
         field: 'created_at',
         type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW
     },
     updated_at: {
         field: 'updated_at',
         type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
 }, {});
 

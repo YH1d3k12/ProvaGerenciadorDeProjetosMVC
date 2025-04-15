@@ -22,11 +22,13 @@ const User = db.define('user', {
     created_at: {
         field: 'created_at',
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     },
     updated_at: {
         field: 'updated_at',
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     },
 }, {});
 

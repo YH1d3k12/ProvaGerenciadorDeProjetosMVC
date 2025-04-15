@@ -58,18 +58,19 @@ class ProjectController {
                 return res.status(400).json({ message: "Id is missing" });
             }
 
+            const project = await Project.findByPk(req.params.id);
+
+            if (!project) {
+                return res.status(404).json({ message: "Project not found" });
+            }
+
             const data = {
                 name: req.body.name,
                 description: req.body.description
             }
 
             const result = await Project.update(data, { where: { id: req.params.id } });
-
-            if (!result) {
-                return res.status(404).json({ message: "Project not found" });
-            }
-
-            res.status(200).json({ message: "Project updated successfully" });
+            res.status(200).json({ result: result, message: "Project updated successfully" });
         }
         catch (error) {
             res.status(500).json({
@@ -84,13 +85,14 @@ class ProjectController {
                 return res.status(400).json({ message: "Id is missing" });
             }
 
-            const result = await Project.destroy({ where: { id: req.params.id } });
+            const project = await Project.findByPk(req.params.id);
 
-            if (!result) {
+            if (!project) {
                 return res.status(404).json({ message: "Project not found" });
             }
 
-            res.status(200).json({ message: "Project deleted successfully" });
+            const result = await Project.destroy({ where: { id: req.params.id } });
+            res.status(200).json({ result: result, message: "Project deleted successfully" });
         }
         catch (error) {
             res.status(500).json({

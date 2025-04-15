@@ -59,6 +59,12 @@ class UserController {
                 return res.status(400).json({ message: "Id is missing" });
             }
 
+            const user = await User.findByPk(req.params.id);
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
             const data = {
                 name: req.body.name,
                 email: req.body.email,
@@ -70,12 +76,7 @@ class UserController {
                     id: req.params.id
                 }
             });
-
-            if (!result) {
-                return res.status(404).json({ message: "User not found" });
-            }
-
-            res.status(200).json(result);
+            res.status(200).json({ result: result, message: "User updated successfully" });
         }
         catch (error) {
             res.status(500).json({
@@ -90,17 +91,18 @@ class UserController {
                 return res.status(400).json({ message: "Id is missing" });
             }
 
+            const user = await User.findByPk(req.params.id);
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
             const result = await User.destroy({
                 where: {
                     id: req.params.id
                 }
             });
-
-            if (!result) {
-                return res.status(404).json({ message: "User not found" });
-            }
-
-            res.status(200).json({ data: result });
+            res.status(200).json({ result: result, message: "User deleted successfully" });
         }
         catch (error) {
             res.status(500).json({
