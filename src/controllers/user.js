@@ -1,6 +1,43 @@
 const User = require('../models/user');
+const DataEncrypter = require('../utils/encrypter.js');
+const encrypter = new DataEncrypter();
 
 class UserController {
+    async Login(req, res) {
+        try {
+            const { email, password } = req.body;
+
+            const { dataValues: user } = await User.findOne({
+                where: {
+                    email: email
+                }
+            });
+
+            if (!email || !password) {
+                return res.status(401).json({ message: "Email ou senha inválido" })
+            }
+
+            if (!user) {
+                return res.status(401).json({ message: "Email ou senha inválido" })
+            }
+
+            if (!(await bcrypt.compare(password, user.password))) {
+                return res.status(401).json({ message: "Email ou senha inválido" })
+            }
+
+            const token = jwt.sign(
+                { id: user.id, email: user.email, name: user.name },
+                config.secret,
+            )
+            return res.status(200).json({ accessToken: token });
+        }
+        catch (error) {
+            return res.status(500).json({
+                message: error.message
+            });
+        }
+    };
+
     async GetUsers(req, res) {
         try {
             const users = await User.findAll();
@@ -36,10 +73,12 @@ class UserController {
 
     async CreateUser(req, res) {
         try {
+            const hashedPassword = await encrypter.HashPassword(data.password);
+
             const data = {
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: hashedPassword
             }
 
             const result = await User.create(data);
