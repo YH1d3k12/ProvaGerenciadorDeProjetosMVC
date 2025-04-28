@@ -73,7 +73,7 @@ class UserController {
 
     async CreateUser(req, res) {
         try {
-            const hashedPassword = await encrypter.HashPassword(data.password);
+            const hashedPassword = await encrypter.HashPassword(req.body.password);
 
             const data = {
                 name: req.body.name,
